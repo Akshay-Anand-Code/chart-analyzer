@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { analyzeImage } from '../services/openaiService';
+import ContractButton from './ContractButton';
 
 const ChartAnalyzer = () => {
   const [file, setFile] = useState(null);
@@ -91,27 +92,28 @@ const ChartAnalyzer = () => {
   }, [analysis]);
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-30"
+      >
+        <source src="/dante.mp4" type="video/mp4" />
+      </video>
+
       <nav className="border-b border-gray-800/10 px-6 py-4 relative z-10 bg-black/20 backdrop-blur-[2px]">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">AKACHI</h1>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">ANALYZE AI</h1>
           <div className="flex gap-8">
-            <a href="#" className="hover:text-purple-500 transition-colors duration-200">Home</a>
-            <a href="#" className="text-purple-500">Analyze</a>
-            <a href="#" className="hover:text-purple-500 transition-colors duration-200">About</a>
-            <a href="#" className="hover:text-purple-500 transition-colors duration-200">Eco</a>
-            <a href="#" className="hover:text-purple-500 transition-colors duration-200">Buy</a>
+            <a href="#" className="hover:text-purple-500 transition-colors duration-200">TWITTER</a>
+            <a href="#" className="hover:text-purple-500 transition-colors duration-200">TELEGRAM</a>
+            <a href="#" className="hover:text-purple-500 transition-colors duration-200">PUMP</a>
           </div>
-          <button className="bg-purple-600/60 hover:bg-purple-600/80 px-4 py-2 rounded-lg transition-colors duration-200">
-            Redacted
-          </button>
+          <ContractButton address="2sCUCJdVkmyXp4dT8sFaA9LKgSMK4yDPi9zLHiwXpump" />
         </div>
       </nav>
-
-      <div 
-        className="absolute inset-0 bg-chart-pattern bg-cover bg-center bg-no-repeat opacity-30"
-        style={{ top: '72px', bottom: '80px' }}
-      />
 
       <main className="relative z-10 max-w-7xl mx-auto p-6 grid grid-cols-2 gap-8">
         <div className="backdrop-blur-md bg-black/30 border border-gray-800/50 rounded-lg p-8 shadow-xl">
@@ -195,15 +197,42 @@ const ChartAnalyzer = () => {
             ) : displayedAnalysis ? (
               <div className="prose prose-invert">
                 {displayedAnalysis.split('\n\n').map((section, index) => {
-                  const [title, ...content] = section.split('\n');
+                  if (index === 0) {
+                    return (
+                      <div key={index} className="mb-6 font-bold text-xl text-blue-400">
+                        {section}
+                      </div>
+                    );
+                  }
+                  
+                  if (section.startsWith('📈') || section.startsWith('🥷') || 
+                      section.startsWith('📉') || section.startsWith('📍') || 
+                      section.startsWith('🎯') || section.startsWith('✅') || 
+                      section.startsWith('⚠️')) {
+                    const [title, ...content] = section.split('\n');
+                    return (
+                      <div key={index} className="mb-6">
+                        <h3 className="text-lg font-semibold text-blue-400 mb-2">
+                          {title}
+                        </h3>
+                        <div className="text-gray-300 space-y-1">
+                          {content.map((line, i) => (
+                            <p key={i} className="leading-relaxed">
+                              {line}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
+                  
                   return (
-                    <div key={index} className="mb-8">
-                      <h3 className="text-xl font-semibold text-blue-400 mb-3">
-                        {title}
-                      </h3>
-                      <div className="text-gray-400 space-y-2">
-                        {content.map((line, i) => (
-                          <p key={i}>{line}</p>
+                    <div key={index} className="mb-6">
+                      <div className="text-gray-300 space-y-1">
+                        {section.split('\n').map((line, i) => (
+                          <p key={i} className="leading-relaxed">
+                            {line}
+                          </p>
                         ))}
                       </div>
                     </div>
@@ -233,7 +262,7 @@ const ChartAnalyzer = () => {
               </svg>
             </a>
           </div>
-          <p className="text-gray-400">© 2025 Akachi. All rights reserved.</p>
+          <p className="text-gray-400">© 2025 ANALYZE AI. All rights reserved.</p>
         </div>
       </footer>
     </div>

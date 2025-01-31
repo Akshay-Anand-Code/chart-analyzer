@@ -27,25 +27,53 @@ export const analyzeImage = async (imageFile) => {
           content: [
             {
               type: "text",
-              text: `Analyze this cryptocurrency chart. Please provide analysis in the following format:
+              text: `Analyze this cryptocurrency chart and provide analysis in the following format:
 
-Price Trends
-[Analysis of current price trends and patterns]
+[PAIR]/[TIMEFRAME]: Brief one-line summary of current state
 
-Support/Resistance
-[Key price levels and areas of interest]
+📈 Trend:
+- Direction: [Bull/Bear] (Strength X/5)
+- Pattern: [Describe key pattern]
+- Recent: [Recent price action]
 
-Volume Analysis
-[Volume patterns and significance]
+🥷 Next Expected Move:
+1. Bull: [Bullish scenario]
+2. Bear: [Bearish scenario]
 
-Technical Indicators
-[Any visible technical indicators and their signals]
+📉 Indicators:
+- [Key indicator readings]
+- [Price action analysis]
 
-Trading Setup
-[Potential entry points, targets, and stop losses]
+Targets:
+- Liquidity Taps: [Key levels]
+- Imbalances: [Notable gaps/imbalances]
+- Swing Pivots: [Important pivot points]
 
-Risk Assessment
-[Market conditions and risk factors]`
+📍 TRADE SETUP
+- Trade Type: [Long/Short]
+- Entry Zone 1: [First entry area]
+- Entry Zone 2: [Second entry area]
+- Invalidation: [Level where setup is invalid]
+
+🎯 EXIT PLAN
+- Stop Loss: [Stop loss level]
+- Target 1: [First take profit]
+- Target 2: [Second take profit]
+- Target 3: [Third take profit]
+
+✅ Confidence Level: [High/Medium/Low]
+- Reason: [Explanation]
+
+📉 RISK LEVEL
+- Risk: [High/Medium/Low]
+- Reason: [Explanation]
+
+⚠️ DISCLAIMER: This is not financial advice.
+
+Key points for Warriors:
+- [Key point 1]
+- [Key point 2]
+- [Key point 3]`
             },
             {
               type: "image_url",

@@ -13,7 +13,8 @@ export default {
           },
         },
         backgroundImage: {
-          'chart-pattern': "url('/image.png')",
+          'gradient-radial': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
+          'gradient-dark': 'linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.95))',
         },
       },
     },
