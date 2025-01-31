@@ -21,50 +21,54 @@ export const analyzeImage = async (imageFile) => {
 
     const prompt = `Analyze this cryptocurrency chart and provide analysis in the following format:
 
-[PAIR]/[TIMEFRAME]: Brief one-line summary of current state
+PAIR/TIMEFRAME: Brief one-line summary of current state
 
-**Pattern:** Describe the main chart pattern
+PATTERN
+• Formation and key structure identification
 
-**Recent:** Recent price action summary
+RECENT PRICE ACTION
+• Summary of recent movements and key levels
 
-**Trend:**
-- Direction: [Bull/Bear] (Strength X/5)
-- Pattern: [Describe key pattern]
-- Recent: [Recent price action]
+TREND ANALYSIS
+• Direction & Strength: [Bull/Bear] (X/5)
+• Pattern Description
+• Recent Movement Details
 
-**Next Expected Move:**
-- Bull Case: [Bullish scenario]
-- Bear Case: [Bearish scenario]
+NEXT MOVES
+• Bullish Scenario: Price targets and conditions
+• Bearish Scenario: Risk levels and invalidation points
 
-**Indicators:**
-- [Key indicator readings]
-- [Price action analysis]
+TECHNICAL INDICATORS
+• RSI/MACD readings
+• Volume analysis
+• Key level identification
 
-**TRADE SETUP**
-- Trade Type: [Long/Short]
-- Entry Zone 1: [First entry area]
-- Entry Zone 2: [Second entry area]
-- Invalidation: [Level where setup is invalid]
+TRADE SETUP
+• Position: Long/Short
+• Entry Zone 1: Price level
+• Entry Zone 2: Price level
+• Invalidation: Level
 
-**Targets:**
-- Stop Loss: [Stop loss level]
-- Target 1: [First take profit]
-- Target 2: [Second take profit]
-- Target 3: [Third take profit]
+TARGET ZONES
+• Stop Loss: Level
+• Target 1: Level
+• Target 2: Level
+• Target 3: Level
 
-**Confidence:** [High/Medium/Low]
-- Reason: [Explanation]
+CONFIDENCE RATING
+• Level: High/Medium/Low
+• Reasoning: Brief explanation
 
-**RISK LEVEL**
-- Risk: [High/Medium/Low]
-- Reason: [Explanation]
+RISK ASSESSMENT
+• Level: High/Medium/Low
+• Reasoning: Key risk factors
 
-# DISCLAIMER: This is not financial advice.
+DISCLAIMER: This is not financial advice.
 
-Key points:
-- [Key point 1]
-- [Key point 2]
-- [Key point 3]`;
+KEY TAKEAWAYS
+• Point 1
+• Point 2
+• Point 3`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",

@@ -77,7 +77,7 @@ Targets:
 
 ⚠️ DISCLAIMER: This is not financial advice.
 
-Key points for Warriors:
+Key points for Analysis:
 - [Key point 1]
 - [Key point 2]
 - [Key point 3]`
