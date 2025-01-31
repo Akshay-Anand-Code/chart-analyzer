@@ -149,7 +149,7 @@ const ChartAnalyzer = () => {
               </a>
             </div>
             <div className="flex gap-4">
-              <TelegramButton botUrl="https://t.me/your_bot_url_here" />
+              <TelegramButton botUrl="https://t.me/AnalyzeAIBot" />
               <ContractButton address="CA" />
             </div>
           </div>
