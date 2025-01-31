@@ -111,16 +111,19 @@ const ChartAnalyzer = () => {
             <a href="#" className="hover:text-purple-500 transition-colors duration-200">TELEGRAM</a>
             <a href="#" className="hover:text-purple-500 transition-colors duration-200">PUMP</a>
           </div>
-          <ContractButton address="2sCUCJdVkmyXp4dT8sFaA9LKgSMK4yDPi9zLHiwXpump" />
+          <ContractButton address="CA" />
         </div>
       </nav>
 
       <main className="relative z-10 max-w-7xl mx-auto p-6 grid grid-cols-2 gap-8">
-        <div className="backdrop-blur-md bg-black/30 border border-gray-800/50 rounded-lg p-8 shadow-xl">
+        <div className="backdrop-blur-md bg-black/40 border border-purple-500/20 rounded-lg p-8 shadow-xl relative before:absolute before:inset-0 before:border-t before:border-purple-500/20 before:rounded-lg">
+          <div className="absolute -top-3 left-8 bg-black/80 px-3 py-1 rounded-md text-xs text-purple-400 font-mono border border-purple-500/20">
+            IMAGE.UPLOAD_PANEL
+          </div>
           <div
-            className={`border-2 border-dashed border-gray-700/50 rounded-lg p-12 text-center
-              ${preview ? 'bg-gray-900/30' : 'hover:bg-gray-900/20'} 
-              transition-all duration-200`}
+            className={`border-2 border-dashed border-purple-500/30 rounded-lg p-12 text-center
+              ${preview ? 'bg-black/50' : 'hover:bg-black/40'} 
+              transition-all duration-200 relative backdrop-blur-sm`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}
             onClick={() => !preview && document.getElementById('fileInput').click()}
@@ -155,70 +158,73 @@ const ChartAnalyzer = () => {
           </div>
 
           {error && (
-            <div className="mt-4 p-4 bg-red-500/10 text-red-400 rounded-lg">
-              {error}
+            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg font-mono text-sm">
+              [ERROR] {error}
             </div>
           )}
 
           <div className="flex gap-4 mt-6">
             <button
               onClick={clearAll}
-              className="flex-1 px-4 py-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-colors backdrop-blur-sm"
+              className="flex-1 px-4 py-3 bg-black/50 border border-purple-500/20 rounded-lg hover:bg-purple-500/10 transition-colors backdrop-blur-sm font-mono text-sm"
             >
-              Clear
+              {'>'} CLEAR_DATA
             </button>
             <button
               onClick={handleAnalyze}
               disabled={!file || loading}
-              className="flex-1 px-4 py-3 bg-blue-600/80 rounded-lg hover:bg-blue-700/80 transition-colors disabled:opacity-50 backdrop-blur-sm"
+              className="flex-1 px-4 py-3 bg-purple-600/20 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors disabled:opacity-50 backdrop-blur-sm font-mono text-sm disabled:cursor-not-allowed"
             >
-              {loading ? 'Analyzing...' : 'Analyze Chart'}
+              {loading ? '> ANALYZING...' : '> EXECUTE_ANALYSIS'}
             </button>
           </div>
         </div>
 
-        <div className="backdrop-blur-md bg-black/30 border border-gray-800/50 rounded-lg p-8 shadow-xl flex flex-col">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <svg className="w-6 h-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="backdrop-blur-md bg-black/40 border border-blue-500/20 rounded-lg p-8 shadow-xl flex flex-col relative before:absolute before:inset-0 before:border-t before:border-blue-500/20 before:rounded-lg">
+          <div className="absolute -top-3 left-8 bg-black/80 px-3 py-1 rounded-md text-xs text-blue-400 font-mono border border-blue-500/20">
+            ANALYSIS.OUTPUT
+          </div>
+          <h2 className="text-xl font-mono mb-6 flex items-center gap-2 text-blue-400">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            Analysis Results
+            {'>'} ANALYSIS_RESULTS
           </h2>
 
           <div 
             ref={analysisRef}
-            className="h-[400px] overflow-y-auto pr-4 custom-scrollbar"
+            className="h-[400px] overflow-y-auto pr-4 custom-scrollbar font-mono text-sm relative bg-black/20 rounded-lg p-4 border border-blue-500/10"
           >
             {loading ? (
-              <div className="flex items-center gap-3 text-gray-400">
-                <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                <span>Analyzing chart...</span>
+              <div className="flex items-center gap-3 text-blue-400">
+                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                <span>{'>'} Processing chart data...</span>
               </div>
             ) : displayedAnalysis ? (
               <div className="prose prose-invert">
                 {displayedAnalysis.split('\n\n').map((section, index) => {
                   if (index === 0) {
                     return (
-                      <div key={index} className="mb-6 font-bold text-xl text-blue-400">
-                        {section}
+                      <div key={index} className="mb-6 font-bold text-lg text-blue-400 border-b border-blue-500/20 pb-2">
+                        {'>'} {section}
                       </div>
                     );
                   }
                   
-                  if (section.startsWith('📈') || section.startsWith('🥷') || 
-                      section.startsWith('📉') || section.startsWith('📍') || 
-                      section.startsWith('🎯') || section.startsWith('✅') || 
-                      section.startsWith('⚠️')) {
+                  if (section.startsWith('**Pattern:**') || section.startsWith('**Recent:**') || 
+                      section.startsWith('**Trend:**') || section.startsWith('**Next Expected Move:**') || 
+                      section.startsWith('**Indicators:**') || section.startsWith('**TRADE SETUP**') || 
+                      section.startsWith('**RISK LEVEL**')) {
                     const [title, ...content] = section.split('\n');
                     return (
-                      <div key={index} className="mb-6">
-                        <h3 className="text-lg font-semibold text-blue-400 mb-2">
-                          {title}
+                      <div key={index} className="mb-6 bg-blue-500/5 p-3 rounded-lg border border-blue-500/10">
+                        <h3 className="text-base font-semibold text-blue-400 mb-2">
+                          {'>'} {title}
                         </h3>
                         <div className="text-gray-300 space-y-1">
                           {content.map((line, i) => (
-                            <p key={i} className="leading-relaxed">
-                              {line}
+                            <p key={i} className="leading-relaxed opacity-80">
+                              {line.startsWith('- ') ? line : `- ${line}`}
                             </p>
                           ))}
                         </div>
@@ -230,7 +236,7 @@ const ChartAnalyzer = () => {
                     <div key={index} className="mb-6">
                       <div className="text-gray-300 space-y-1">
                         {section.split('\n').map((line, i) => (
-                          <p key={i} className="leading-relaxed">
+                          <p key={i} className="leading-relaxed opacity-80">
                             {line}
                           </p>
                         ))}
@@ -241,7 +247,7 @@ const ChartAnalyzer = () => {
               </div>
             ) : (
               <div className="text-center text-gray-500 py-12">
-                Upload an image to see the analysis results
+                {'>'} Awaiting image input for analysis...
               </div>
             )}
           </div>
