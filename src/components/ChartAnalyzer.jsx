@@ -16,9 +16,9 @@ const ChartAnalyzer = () => {
 
   // Add social media URLs
   const socialLinks = {
-    twitter: "https://x.com/AnalyzeAISolana",
-    telegram: "https://t.me/ANAaiPortal",
-    pump: "https://your_pump_url.com"
+    twitter: "",
+    telegram: "",
+    pump: ""
   };
 
   const handleIntroComplete = () => {
@@ -121,7 +121,7 @@ const ChartAnalyzer = () => {
 
         <nav className="border-b border-gray-800/10 px-6 py-4 relative z-10 bg-black/20 backdrop-blur-[2px]">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">ANALYZE AI</h1>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">CHART ANALYZER</h1>
             <div className="flex gap-8">
               <a 
                 href={socialLinks.twitter}
@@ -149,8 +149,8 @@ const ChartAnalyzer = () => {
               </a>
             </div>
             <div className="flex gap-4">
-              <TelegramButton botUrl="https://t.me/AnalyzeAIBot" />
-              <ContractButton address="CFUGzh1JfeuR1nxeRUvwvVqAdbrQWbNeqpVigduFpump" />
+              <TelegramButton botUrl="" />
+              <ContractButton address="1234pumpaddress" />
             </div>
           </div>
         </nav>
