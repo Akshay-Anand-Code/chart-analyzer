@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { analyzeImage } from '../services/openaiService';
-import ContractButton from './ContractButton';
 import TelegramButton from './TelegramButton';
 import IntroScreen from './IntroScreen';
+import AnalysisCharts from './AnalysisCharts';
+import StarField from './StarField';
+import { Radar, Line, Bar } from 'react-chartjs-2';
+import { parseAnalysisData } from '../utils/analysisUtils';
 
 const ChartAnalyzer = () => {
   const [showIntro, setShowIntro] = useState(true);
@@ -13,6 +16,8 @@ const ChartAnalyzer = () => {
   const [analysis, setAnalysis] = useState('');
   const [displayedAnalysis, setDisplayedAnalysis] = useState('');
   const analysisRef = useRef(null);
+  const [showGraphics, setShowGraphics] = useState(false);
+  const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
 
   // Add social media URLs
   const socialLinks = {
@@ -77,18 +82,23 @@ const ChartAnalyzer = () => {
     setFile(null);
     setPreview('');
     setAnalysis('');
+    setDisplayedAnalysis('');
     setError('');
+    setShowGraphics(false);
+    setIsAnalysisComplete(false);
   };
 
   useEffect(() => {
     if (analysis) {
       setDisplayedAnalysis('');
+      setIsAnalysisComplete(false);
       let currentText = '';
       const words = analysis.split(' ');
       
       const typeInterval = setInterval(() => {
         if (words.length === 0) {
           clearInterval(typeInterval);
+          setIsAnalysisComplete(true);
           return;
         }
         
@@ -99,16 +109,32 @@ const ChartAnalyzer = () => {
         if (analysisRef.current) {
           analysisRef.current.scrollTop = analysisRef.current.scrollHeight;
         }
-      }, 30); // Adjust speed as needed
+      }, 30);
 
       return () => clearInterval(typeInterval);
     }
   }, [analysis]);
 
+  useEffect(() => {
+    if (displayedAnalysis) {
+      const parsed = parseAnalysisData(displayedAnalysis);
+      console.log('Parsed Analysis Data:', parsed);
+    }
+  }, [displayedAnalysis]);
+
+  const handleShowGraphics = () => {
+    setShowGraphics(true);
+  };
+
+  // Only show the "Show Graphics" button when analysis is complete
+  const showGraphicsButton = isAnalysisComplete && displayedAnalysis && !showGraphics;
+
   return (
     <>
       {showIntro && <IntroScreen onComplete={handleIntroComplete} />}
       <div className={`min-h-screen bg-black text-white relative overflow-hidden transition-opacity duration-500 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
+        <StarField />
+        
         <video
           autoPlay
           loop
@@ -119,15 +145,15 @@ const ChartAnalyzer = () => {
           <source src="/dante.mp4" type="video/mp4" />
         </video>
 
-        <nav className="border-b border-gray-800/10 px-6 py-4 relative z-10 bg-black/20 backdrop-blur-[2px]">
+        <nav className="border-b border-tech-accent/20 px-6 py-4 relative z-10 bg-black/20 backdrop-blur-[2px]">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">CHART ANALYZER</h1>
-            <div className="flex gap-8">
+            <h1 className="text-3xl font-space font-bold text-tech-accent tracking-tight">CHART ANALYZER</h1>
+            <div className="flex gap-8 font-space tracking-wide text-sm">
               <a 
                 href={socialLinks.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-purple-500 transition-colors duration-200"
+                className="hover:text-tech-accent transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-tech-accent after:transition-all after:duration-300"
               >
                 TWITTER
               </a>
@@ -135,7 +161,7 @@ const ChartAnalyzer = () => {
                 href={socialLinks.telegram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-purple-500 transition-colors duration-200"
+                className="hover:text-tech-accent transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-tech-accent after:transition-all after:duration-300"
               >
                 TELEGRAM
               </a>
@@ -143,162 +169,192 @@ const ChartAnalyzer = () => {
                 href={socialLinks.pump}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-purple-500 transition-colors duration-200"
+                className="hover:text-tech-accent transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-tech-accent after:transition-all after:duration-300"
               >
                 PUMP
               </a>
             </div>
-            <div className="flex gap-4">
-              <TelegramButton botUrl="https://t.me/analyzechartbot" />
-              <ContractButton address="1234pumpaddress" />
-            </div>
           </div>
         </nav>
 
-        <main className="relative z-10 max-w-7xl mx-auto p-6 grid grid-cols-2 gap-8">
-          <div className="backdrop-blur-md bg-black/40 border border-purple-500/20 rounded-lg p-8 shadow-xl relative before:absolute before:inset-0 before:border-t before:border-purple-500/20 before:rounded-lg">
-            <div className="absolute -top-3 left-8 bg-black/80 px-3 py-1 rounded-md text-xs text-purple-400 font-mono border border-purple-500/20">
-              IMAGE.UPLOAD_PANEL
-            </div>
-            <div
-              className={`border-2 border-dashed border-purple-500/30 rounded-lg p-12 text-center
-                ${preview ? 'bg-black/50' : 'hover:bg-black/40'} 
-                transition-all duration-200 relative backdrop-blur-sm`}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={handleDrop}
-              onClick={() => !preview && document.getElementById('fileInput').click()}
-            >
-              {!preview ? (
-                <>
-                  <div className="mb-4">
-                    <svg className="w-12 h-12 mx-auto text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl mb-2">Drop your image here</h3>
-                  <p className="text-gray-500 mb-6">Upload Chart images up to 5MB with max aspect ratio 2:1</p>
-                  <input
-                    id="fileInput"
-                    type="file"
-                    className="hidden"
-                    onChange={handleFileSelect}
-                    accept="image/*"
-                  />
-                  <button className="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                    Choose File
-                  </button>
-                </>
-              ) : (
-                <img 
-                  src={preview} 
-                  alt="Preview" 
-                  className="max-h-[400px] rounded-lg object-contain" 
-                />
-              )}
-            </div>
-
-            {error && (
-              <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg font-mono text-sm">
-                [ERROR] {error}
+        <main className="relative z-10 max-w-7xl mx-auto p-6 space-y-8">
+          <div className="grid grid-cols-2 gap-8">
+            <div className="backdrop-blur-md bg-black/40 border border-tech-accent/20 rounded-lg p-8 shadow-xl relative before:absolute before:inset-0 before:border-t before:border-tech-accent/20 before:rounded-lg">
+              <div className="absolute -top-3 left-8 bg-black/80 px-3 py-1 rounded-md text-xs font-mono text-tech-accent border border-tech-accent/20">
+                IMAGE.UPLOAD_PANEL
               </div>
-            )}
-
-            <div className="flex gap-4 mt-6">
-              <button
-                onClick={clearAll}
-                className="flex-1 px-4 py-3 bg-black/50 border border-purple-500/20 rounded-lg hover:bg-purple-500/10 transition-colors backdrop-blur-sm font-mono text-sm"
+              <div
+                className={`border-2 border-dashed border-tech-accent/30 rounded-lg p-12 text-center
+                  ${preview ? 'bg-black/50' : 'hover:bg-black/40'} 
+                  transition-all duration-200 relative backdrop-blur-sm`}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
+                onClick={() => !preview && document.getElementById('fileInput').click()}
               >
-                {'>'} CLEAR_DATA
-              </button>
-              <button
-                onClick={handleAnalyze}
-                disabled={!file || loading}
-                className="flex-1 px-4 py-3 bg-purple-600/20 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors disabled:opacity-50 backdrop-blur-sm font-mono text-sm disabled:cursor-not-allowed"
-              >
-                {loading ? '> ANALYZING...' : '> EXECUTE_ANALYSIS'}
-              </button>
-            </div>
-          </div>
+                {!preview ? (
+                  <>
+                    <div className="mb-4">
+                      <svg className="w-12 h-12 mx-auto text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl mb-2">Drop your image here</h3>
+                    <p className="text-gray-500 mb-6">Upload Chart images up to 5MB with max aspect ratio 2:1</p>
+                    <input
+                      id="fileInput"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileSelect}
+                      accept="image/*"
+                    />
+                    <button className="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                      Choose File
+                    </button>
+                  </>
+                ) : (
+                  <img 
+                    src={preview} 
+                    alt="Preview" 
+                    className="max-h-[400px] rounded-lg object-contain" 
+                  />
+                )}
+              </div>
 
-          <div className="backdrop-blur-md bg-black/40 border border-blue-500/20 rounded-lg p-8 shadow-xl flex flex-col relative before:absolute before:inset-0 before:border-t before:border-blue-500/20 before:rounded-lg">
-            <div className="absolute -top-3 left-8 bg-black/80 px-3 py-1 rounded-md text-xs text-blue-400 font-mono border border-blue-500/20">
-              ANALYSIS.OUTPUT
-            </div>
-            <h2 className="text-xl font-mono mb-6 flex items-center gap-2 text-blue-400">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              {'>'} ANALYSIS_RESULTS
-            </h2>
-
-            <div 
-              ref={analysisRef}
-              className="h-[400px] overflow-y-auto pr-4 custom-scrollbar font-mono text-sm relative bg-black/20 rounded-lg p-4 border border-blue-500/10"
-            >
-              {loading ? (
-                <div className="flex items-center gap-3 text-blue-400">
-                  <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                  <span>{'>'} Processing chart data...</span>
-                </div>
-              ) : displayedAnalysis ? (
-                <div className="prose prose-invert">
-                  {displayedAnalysis.split('\n\n').map((section, index) => {
-                    // Skip horizontal rules
-                    if (section.trim() === '---') {
-                      return null;
-                    }
-
-                    // Title section
-                    if (index === 0) {
-                      return (
-                        <div key={index} className="mb-6 font-bold text-xl text-blue-400 border-b border-blue-500/20 pb-2">
-                          {section}
-                        </div>
-                      );
-                    }
-
-                    // Main sections
-                    const [title, ...content] = section.split('\n');
-                    
-                    // Skip disclaimer and show it differently
-                    if (title === 'DISCLAIMER: This is not financial advice.') {
-                      return (
-                        <div key={index} className="my-6 text-yellow-500/80 text-sm italic border-t border-b border-yellow-500/20 py-2 px-4">
-                          {title}
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <div key={index} className="mb-6 bg-blue-500/5 p-4 rounded-lg border border-blue-500/10">
-                        <h3 className="text-base font-bold text-blue-400 mb-3 tracking-wide">
-                          {title}
-                        </h3>
-                        <div className="text-gray-300 space-y-2">
-                          {content.map((line, i) => (
-                            <p key={i} className="leading-relaxed">
-                              {line.startsWith('•') ? (
-                                <span className="flex items-start">
-                                  <span className="text-blue-500 mr-2">•</span>
-                                  <span className="opacity-90">{line.substring(2)}</span>
-                                </span>
-                              ) : (
-                                <span className="opacity-80">{line}</span>
-                              )}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="text-center text-gray-500 py-12">
-                  {'>'} Awaiting image input for analysis...
+              {error && (
+                <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg font-mono text-sm">
+                  [ERROR] {error}
                 </div>
               )}
+
+              <div className="flex gap-4 mt-6">
+                <button
+                  onClick={clearAll}
+                  className="flex-1 px-4 py-3 bg-black/50 border border-tech-accent/20 rounded-lg hover:bg-tech-accent/10 transition-colors backdrop-blur-sm font-mono text-sm"
+                >
+                  {'>'} CLEAR_DATA
+                </button>
+                <button
+                  onClick={handleAnalyze}
+                  disabled={!file || loading}
+                  className="flex-1 px-6 py-3 bg-tech-accent/10 border border-tech-accent/30 rounded-lg 
+                    hover:bg-tech-accent/20 transition-all duration-300 disabled:opacity-50 
+                    backdrop-blur-sm font-space text-tech-accent text-sm uppercase tracking-wider
+                    disabled:cursor-not-allowed relative overflow-hidden group"
+                >
+                  <span className="relative z-10">
+                    {loading ? '> ANALYZING...' : '> EXECUTE_ANALYSIS'}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-tech-accent/0 via-tech-accent/10 to-tech-accent/0 
+                    translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000">
+                  </div>
+                </button>
+                {showGraphicsButton && (
+                  <button
+                    onClick={handleShowGraphics}
+                    className="flex-1 px-4 py-3 bg-tech-accent/20 border border-tech-accent/30 rounded-lg hover:bg-tech-accent/30 transition-colors backdrop-blur-sm font-mono text-sm"
+                  >
+                    {'>'} SHOW_GRAPHICS
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="backdrop-blur-md bg-black/40 border border-tech-secondary/20 rounded-lg p-8 shadow-xl flex flex-col relative before:absolute before:inset-0 before:border-t before:border-tech-secondary/20 before:rounded-lg">
+              <div className="absolute -top-3 left-8 bg-black/80 px-3 py-1 rounded-md text-xs font-mono text-tech-secondary border border-tech-secondary/20">
+                ANALYSIS.OUTPUT
+              </div>
+              <h2 className="text-xl font-space mb-6 flex items-center gap-2 text-tech-secondary">
+                {'>'} ANALYSIS_RESULTS
+              </h2>
+
+              <div 
+                ref={analysisRef}
+                className="h-[400px] overflow-y-auto pr-4 custom-scrollbar font-mono text-sm relative bg-black/20 rounded-lg p-4 border border-tech-secondary/10"
+              >
+                {loading ? (
+                  <div className="flex items-center gap-3 text-tech-secondary">
+                    <div className="w-4 h-4 border-2 border-tech-secondary border-t-transparent rounded-full animate-spin" />
+                    <span>{'>'} Processing chart data...</span>
+                  </div>
+                ) : displayedAnalysis ? (
+                  <>
+                    <div className="prose prose-invert">
+                      {displayedAnalysis.split('\n\n').map((section, index) => {
+                        // Skip horizontal rules
+                        if (section.trim() === '---') {
+                          return null;
+                        }
+
+                        // Title section
+                        if (index === 0) {
+                          return (
+                            <div key={index} className="mb-6 font-bold text-xl text-tech-secondary border-b border-tech-secondary/20 pb-2">
+                              {section}
+                            </div>
+                          );
+                        }
+
+                        // Main sections
+                        const [title, ...content] = section.split('\n');
+                        
+                        // Skip disclaimer and show it differently
+                        if (title === 'DISCLAIMER: This is not financial advice.') {
+                          return (
+                            <div key={index} className="my-6 text-yellow-500/80 text-sm italic border-t border-b border-yellow-500/20 py-2 px-4">
+                              {title}
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div key={index} className="mb-6 bg-tech-secondary/5 p-4 rounded-lg border border-tech-secondary/10">
+                            <h3 className="text-base font-bold text-tech-secondary mb-3 tracking-wide">
+                              {title}
+                            </h3>
+                            <div className="text-gray-300 space-y-2">
+                              {content.map((line, i) => (
+                                <p key={i} className="leading-relaxed">
+                                  {line.startsWith('•') ? (
+                                    <span className="flex items-start">
+                                      <span className="text-tech-secondary mr-2">•</span>
+                                      <span className="opacity-90">{line.substring(2)}</span>
+                                    </span>
+                                  ) : (
+                                    <span className="opacity-80">{line}</span>
+                                  )}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center text-gray-500 py-12">
+                    {'>'} Awaiting image input for analysis...
+                  </div>
+                )}
+              </div>
             </div>
           </div>
+
+          {isAnalysisComplete && showGraphics && displayedAnalysis && (
+            <div className="backdrop-blur-md bg-black/40 border border-tech-accent/20 rounded-lg p-8 shadow-xl relative">
+              <div className="absolute -top-3 left-8 bg-black/80 px-3 py-1 rounded-md text-xs font-mono text-tech-accent border border-tech-accent/20">
+                MARKET_METRICS
+              </div>
+              
+              <h2 className="text-xl font-space mb-6 flex items-center gap-2 text-tech-accent">
+                {'>'} ANALYSIS_METRICS
+              </h2>
+
+              <AnalysisCharts 
+                analysisData={displayedAnalysis} 
+                visible={true} 
+              />
+            </div>
+          )}
         </main>
       </div>
     </>

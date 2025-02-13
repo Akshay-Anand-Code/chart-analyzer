@@ -4,7 +4,7 @@
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(147, 51, 234, 0.3) rgba(0, 0, 0, 0.2);
+  scrollbar-color: theme('colors.tech.accent') rgba(0, 0, 0, 0.2);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -17,13 +17,30 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(147, 51, 234, 0.3);
+  background-color: theme('colors.tech.accent');
   border-radius: 3px;
-  border: 1px solid rgba(147, 51, 234, 0.1);
+  border: 1px solid rgba(0, 255, 178, 0.1);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(147, 51, 234, 0.5);
+  background-color: theme('colors.tech.accent');
+}
+
+.button-glow {
+  box-shadow: 0 0 15px theme('colors.tech.accent');
+}
+
+.text-glow {
+  text-shadow: 0 0 10px currentColor;
+}
+
+.panel-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.panel-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 255, 178, 0.1);
 }
 
 @keyframes blink {
