@@ -62,6 +62,11 @@ const ChartAnalyzer = () => {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   const handleAnalyze = async () => {
     if (!file) return;
 
@@ -129,6 +134,31 @@ const ChartAnalyzer = () => {
   // Only show the "Show Graphics" button when analysis is complete
   const showGraphicsButton = isAnalysisComplete && displayedAnalysis && !showGraphics;
 
+  // Add useEffect for global paste handler
+  useEffect(() => {
+    const handleGlobalPaste = (e) => {
+      const items = e.clipboardData?.items;
+      
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          const pastedFile = item.getAsFile();
+          handleFileSelect({ target: { files: [pastedFile] } });
+          break;
+        }
+      }
+    };
+
+    // Add global paste event listener
+    document.addEventListener('paste', handleGlobalPaste);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('paste', handleGlobalPaste);
+    };
+  }, []); // Empty dependency array since we don't need to re-add the listener
+
   return (
     <>
       {showIntro && <IntroScreen onComplete={handleIntroComplete} />}
@@ -187,7 +217,7 @@ const ChartAnalyzer = () => {
                 className={`border-2 border-dashed border-tech-accent/30 rounded-lg p-12 text-center
                   ${preview ? 'bg-black/50' : 'hover:bg-black/40'} 
                   transition-all duration-200 relative backdrop-blur-sm`}
-                onDragOver={(e) => e.preventDefault()}
+                onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onClick={() => !preview && document.getElementById('fileInput').click()}
               >
@@ -199,7 +229,8 @@ const ChartAnalyzer = () => {
                       </svg>
                     </div>
                     <h3 className="text-xl mb-2">Drop your image here</h3>
-                    <p className="text-gray-500 mb-6">Upload Chart images up to 5MB with max aspect ratio 2:1</p>
+                    <p className="text-gray-500 mb-2">Upload Chart images up to 5MB with max aspect ratio 2:1</p>
+                    <p className="text-gray-500 mb-6">Or paste from clipboard (Ctrl+V)</p>
                     <input
                       id="fileInput"
                       type="file"
