@@ -57,8 +57,8 @@ const ChartAnalyzer = () => {
 
   // Add social media URLs
   const socialLinks = {
-    twitter: "",
-    telegram: "",
+    twitter: "https://x.com/Analyze_Tech",
+    telegram: "https://t.me/AnalyzeAIBot",
     pump: ""
   };
 
