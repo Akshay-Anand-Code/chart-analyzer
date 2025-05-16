@@ -10,7 +10,7 @@ const TelegramButton = ({ botUrl }) => {
       onClick={handleClick}
       className="bg-blue-600/60 hover:bg-blue-600/80 px-4 py-2 rounded-lg transition-colors duration-200 font-mono"
     >
-      {'>'} CHART ANALYZER Bot
+      {'>'} ANALYZE TECH Bot
     </button>
   );
 };

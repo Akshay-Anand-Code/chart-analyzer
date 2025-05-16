@@ -3,9 +3,45 @@ import { analyzeImage } from '../services/openaiService';
 import TelegramButton from './TelegramButton';
 import IntroScreen from './IntroScreen';
 import AnalysisCharts from './AnalysisCharts';
-import StarField from './StarField';
 import { Radar, Line, Bar } from 'react-chartjs-2';
 import { parseAnalysisData } from '../utils/analysisUtils';
+import FAQ from './FAQ';
+import StarField from './StarField';
+
+// Footer component
+const Footer = () => (
+  <footer className="w-full py-8 mt-16 bg-gradient-to-r from-black via-gray-900 to-black border-t border-tech-accent/10 text-center text-gray-500 text-sm">
+    <div className="mb-2">
+      <span className="font-bold text-tech-accent">ANALYZE TECH</span> &copy; {new Date().getFullYear()} — All rights reserved.
+    </div>
+    <div className="flex justify-center gap-6 mt-2">
+      <a href="#" className="hover:text-tech-accent transition">Privacy Policy</a>
+      <a href="#" className="hover:text-tech-accent transition">Terms of Service</a>
+      <a href="#" className="hover:text-tech-accent transition">Contact</a>
+    </div>
+  </footer>
+);
+
+// Add CTA section before Footer
+const CTASection = () => (
+  <section className="w-full flex flex-col items-center justify-center py-20 bg-black/90 backdrop-blur-sm relative z-20">
+    <div className="max-w-4xl mx-auto px-6 text-center">
+      <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+        Ready to unlock the power of chart analysis?
+      </h2>
+      <p className="text-gray-100 text-xl text-center max-w-2xl mx-auto mb-10 leading-relaxed">
+        Join traders and analysts using ANANLYZE TECH for fast, AI-powered insights. Upload your chart and get actionable analysis in seconds. Start now and make smarter trading decisions!
+      </p>
+      <a
+        href="#main-analyzer"
+        className="inline-block px-10 py-4 rounded-full bg-green-400 text-black font-bold text-xl shadow-lg hover:bg-green-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transform hover:scale-105"
+        style={{ boxShadow: '0 0 32px 0 #22d3ee80' }}
+      >
+        Start Analyzing Now &rarr;
+      </a>
+    </div>
+  </section>
+);
 
 const ChartAnalyzer = () => {
   const [showIntro, setShowIntro] = useState(true);
@@ -162,9 +198,12 @@ const ChartAnalyzer = () => {
   return (
     <>
       {showIntro && <IntroScreen onComplete={handleIntroComplete} />}
-      <div className={`min-h-screen bg-black text-white relative overflow-hidden transition-opacity duration-500 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`min-h-screen bg-black text-white relative overflow-hidden transition-opacity duration-500 ${showIntro ? 'opacity-0' : 'opacity-100'}`}
+        style={{
+          background: '#000',
+        }}
+      >
         <StarField />
-        
         <video
           autoPlay
           loop
@@ -174,10 +213,15 @@ const ChartAnalyzer = () => {
         >
           <source src="/dante.mp4" type="video/mp4" />
         </video>
+        {/* Add vignette overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 100%)',
+          zIndex: 1
+        }} />
 
         <nav className="border-b border-tech-accent/20 px-6 py-4 relative z-10 bg-black/20 backdrop-blur-[2px]">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 className="text-3xl font-space font-bold text-tech-accent tracking-tight">CHART ANALYZER</h1>
+            <h1 className="text-3xl font-space font-bold text-tech-accent tracking-tight">ANALYZE TECH</h1>
             <div className="flex gap-8 font-space tracking-wide text-sm">
               <a 
                 href={socialLinks.twitter}
@@ -387,6 +431,12 @@ const ChartAnalyzer = () => {
             </div>
           )}
         </main>
+        {/* FAQ */}
+        <FAQ />
+        {/* CTA Section */}
+        <CTASection />
+        {/* Footer */}
+        <Footer />
       </div>
     </>
   );

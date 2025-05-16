@@ -170,7 +170,7 @@ function startBot() {
   bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, 
-      '🤖 Welcome to CHART ANALYZER Chart Analysis Bot!\n\n' +
+      '🤖 Welcome to ANALYZE TECH Chart Analysis Bot!\n\n' +
       'Send me a cryptocurrency chart image and I will analyze it for you.\n\n' +
       'Commands:\n' +
       '/start - Show this welcome message\n' +
@@ -182,7 +182,7 @@ function startBot() {
   bot.onText(/\/help/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId,
-      '📊 How to use CHART ANALYZER Bot:\n\n' +
+      '📊 How to use ANALYZE TECH Bot:\n\n' +
       '1. Simply send a cryptocurrency chart image\n' +
       '2. Wait for the analysis (usually takes 10-15 seconds)\n' +
       '3. Receive detailed analysis including:\n' +
