@@ -59,7 +59,7 @@ const ChartAnalyzer = () => {
   const socialLinks = {
     twitter: "https://x.com/Analyze_Tech",
     telegram: "https://t.me/AnalyzeAIBot",
-    pump: ""
+    pump: "https://pump.fun/coin/13ax2DUcbghUmejk6WRF5BbuTJ1UZHHVTMTFK8qUpump"
   };
 
   const handleIntroComplete = () => {
